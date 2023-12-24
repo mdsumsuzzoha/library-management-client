@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { AuthContext } from "./AuthProviders";
+import axios from "axios";
 
 
 export const DataContext = createContext(null);
@@ -12,13 +13,17 @@ const DataProvider = ({ children }) => {
     const [borrowBooks, setBorrowBooks] = useState([]);
 
 
-    const url = `http://localhost:5000/borrowed?email=${user?.email}`
+    const url = `http://localhost:5000/borrowed?email=${user?.email}`;
     useEffect(() => {
-        fetch(url)
-            .then(res => res.json())
-            .then(data => setBorrowBooks(data))
+        axios.get(url, { withCredentials: true })
+            .then(res => {
+                setBorrowBooks(res.data);
+            })
+        // fetch(url)
+        //     .then(res => res.json())
+        //     .then(data => setBorrowBooks(data))
     }, [user])
-    console.log(borrowBooks);
+    // console.log(borrowBooks);
 
 
 

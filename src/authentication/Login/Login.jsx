@@ -3,6 +3,7 @@ import { AuthContext } from "../../providers/AuthProviders";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
 
 
 const Login = () => {
@@ -16,13 +17,24 @@ const Login = () => {
     const handleLoginForm = e => {
         e.preventDefault();
         const form = new FormData(e.currentTarget);
-        const userLogInEmail = form.get('email')
-        const userLogInPassword = form.get('password')
+        const email = form.get('email')
+        const password = form.get('password')
         // console.log(userLogInEmail, userLogInPassword)
 
-        signInUser(userLogInEmail, userLogInPassword)
-            .then(() => {
-                navigate(location?.state ? location.state : '/')
+        signInUser(email, password)
+            .then((result) => {
+                const loggedInUser = result.user;
+                console.log(loggedInUser);
+                const user = {email};
+                // ?get access tocken 
+                axios.post('http://localhost:5000/jwt', user, {withCredentials:true})
+                .then(res=>{
+                    // console.log(res.data)
+                    if(res.data.success){
+                        navigate(location?.state ? location.state : '/')
+                    }
+                })
+
             }
             )
             .catch(error => {
