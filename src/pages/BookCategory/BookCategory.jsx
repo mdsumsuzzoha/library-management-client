@@ -1,15 +1,6 @@
-// import { useHistory } from 'react-router-dom'; // Assuming you're using React Router for navigation
-
 import { Link } from "react-router-dom";
-import BooksByCat from "../BooksByCat/BooksByCat";
 
 const BookCategory = () => {
-  //   const history = useHistory();
-
-  const handleCategoryClick = () => {
-    // Navigate to a new page for the selected category's books
-    // history.push(`/books/${categoryName}`); // Replace this with your desired route
-  };
 
   return (
     <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-6">
@@ -20,9 +11,6 @@ const BookCategory = () => {
         <div className="card-body items-center text-center">
           <h2 className="card-title">Fantasy</h2>
           <div className="card-actions">
-            {/* <button className="btn btn-primary">
-              <BooksByCat></BooksByCat>
-              See Books</button> */}
             <Link to={`/booksByCat/${"Fantasy"}`} ><button className="btn btn-primary">See Books</button></Link>
           </div>
         </div>

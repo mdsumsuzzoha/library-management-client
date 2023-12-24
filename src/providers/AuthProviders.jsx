@@ -27,7 +27,6 @@ const AuthProvider = ({ children }) => {
       return await updateProfile(auth.currentUser, {
         displayName: name, 
         photoURL: photoURL,
-        // photoURL: "https://i.ibb.co/nwbfXmd/speakers-5.jpg",
       })
     }
     const signInUser = (email, password) => {

@@ -15,7 +15,7 @@ const BookDetails = () => {
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
     // console.log(bookDetails);
-    const { img, name, author, description, qty, publisher, published_date, pages, } = bookDetails;
+    const { _id, img, name, category, author, description, qty, publisher, published_date, pages, } = bookDetails;
 
     useEffect(() => {
         setLoading(true);
@@ -29,10 +29,27 @@ const BookDetails = () => {
         e.preventDefault();
         const form = e.target;
         const email = form.email.value;
-        const name = form.name.value;
-        const date = form.date.value;
-        console.log(name, email, date);
-        console.log('inside from Modal')
+        const bookDebtor = form.name.value;
+        const returnDate = form.date.value;
+        const borrowDate = new Date().toISOString().split('T')[0];
+
+        // console.log('borrow', borrowDate);
+        // console.log('return', returnDate);
+
+        const borrow = {
+            bookId: _id,
+            bookName: name,
+            img,
+            author,
+            category,
+            email,
+            bookDebtor,
+            borrowDate,
+            returnDate,
+            description,
+        }
+        console.log(borrow);
+        // console.log('inside from Modal')
         Swal.fire({
             title: "Are you sure?",
             icon: "warning",
@@ -40,15 +57,43 @@ const BookDetails = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, Submit"
-          }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
-              Swal.fire({
-                title: "Submited",
-                icon: "success"
-              });
-              onCloseModal();
+                fetch('http://localhost:5000/borrowed', {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify(borrow)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        // console.log(data)
+                        if (data.insertedId) {
+                            fetch(`http://localhost:5000/books/${_id}`, {
+                                method: 'PATCH',
+                                headers: {
+                                    'content-type': 'application/json'
+                                },
+                                body: JSON.stringify({ id: _id })
+                            })
+                                .then(res => res.json())
+                                .then(data => {
+                                    console.log(data);
+                                    if (data) {
+                                        Swal.fire({
+                                            title: "Submited",
+                                            icon: "success"
+                                        });
+                                        onCloseModal();
+                                    }
+                                })
+
+                        }
+                    })
+
             }
-          });
+        });
     }
 
     const handleRead = async () => {
@@ -94,7 +139,9 @@ const BookDetails = () => {
                             </table>
                         </div>
                         <div className="grid grid-cols-2 gap-6 w-64">
-                            <button onClick={onOpenModal} className="btn btn-outline btn-secondary">Borrow</button>
+                            <button onClick={onOpenModal} className="btn btn-outline btn-secondary"
+                                disabled={qty < 1}
+                            >Borrow</button>
                             <button onClick={handleRead} className="btn btn-outline btn-info">Read Now</button>
 
                         </div>
@@ -103,11 +150,17 @@ const BookDetails = () => {
 
                 {/* Modal Details */}
 
-                <div>
+                <div >
                     <Modal open={open} onClose={onCloseModal} center
-                    >
-                        <div>
-                            <form onSubmit={handleBorrowSubmit} className="card-body">
+                     >
+                        <div >
+                            <form onSubmit={handleBorrowSubmit} className="card-body w-full">
+                                <div className="form-control">
+                                    <label className="label">
+                                        <span className="label-text">Name</span>
+                                    </label>
+                                    <input type="text" name="name" defaultValue={user?.displayName} className="input input-bordered" />
+                                </div>
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text">Email</span>
@@ -116,19 +169,13 @@ const BookDetails = () => {
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
-                                        <span className="label-text">Name</span>
-                                    </label>
-                                    <input type="text" name="name" defaultValue={user?.displayName} className="input input-bordered" disabled />
-                                </div>
-                                <div className="form-control">
-                                    <label className="label">
                                         <span className="label-text">Return Date</span>
                                     </label>
                                     <input type="date" name="date" className="input input-bordered" required />
                                 </div>
-                                <div className="grid grid-cols-2 gap-6 w-44 mx-auto my-6">
-                                    <div className="">
-                                        <input type="submit" className="btn" value="Submit" />
+                                <div className="form-control">
+                                    <div className=" text-center pt-4">
+                                        <input type="submit" className="btn btn-outline btn-secondary" value="Submit" />
                                     </div>
                                 </div>
                             </form>

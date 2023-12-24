@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import {  Link, NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProviders";
 
 
@@ -24,31 +24,34 @@ const Navbar = () => {
         <li><NavLink to='/'>Home</NavLink></li>
         {user && <>
             <li><NavLink to='/addBook'>Add Book</NavLink></li>
-            <li><NavLink to='/allBook'>All Book</NavLink></li>
+            <li><NavLink to='/allBook'>All Books</NavLink></li>
+            <li><NavLink to='/borrowed'>Borrowed Books</NavLink></li>
         </>
         }
         <li><NavLink to='/about'>About</NavLink></li>
         <li><NavLink to='/contact'>Contact</NavLink></li>
-        <li><NavLink to='/login' >Login</NavLink></li>
-        <li><NavLink to='/register'>Register</NavLink></li>
-        {/* {!user && <>
+
+        {!user && <>
+            <li><NavLink to='/login' >Login</NavLink></li>
+            <li><NavLink to='/register'>Register</NavLink></li>
         </>
-        } */}
+        }
 
     </>
 
     const linksVartical = <>
         <li><NavLink to='/'>Home</NavLink></li>
-        {/* {user && <>
-            <li><NavLink to='/addProduct'>Add Product</NavLink></li>
-            <li><NavLink to='/myCart'>My Cart</NavLink></li>
+        {user && <>
+            <li><NavLink to='/addBook'>Add Book</NavLink></li>
+            <li><NavLink to='/allBook'>All Books</NavLink></li>
+            <li><NavLink to='/borrowed'>Borrowed Books</NavLink></li>
         </>
-        } */}
+        }
         <li><NavLink to='/about'>About</NavLink></li>
         <li><NavLink to='/contact'>Contact</NavLink></li>
         {!user && <>
-            <li><NavLink to='/signin'>Sign In</NavLink></li>
-            <li><NavLink to='/signup'>Sign Up</NavLink></li>
+            <li><NavLink to='/login' >Login</NavLink></li>
+            <li><NavLink to='/register'>Register</NavLink></li>
         </>
         }
 
@@ -92,8 +95,8 @@ const Navbar = () => {
                             </li>
                             <li >{user ? <><Link to="/" onClick={handleSignOut} className="bg-slate-300 rounded my-1">Sign Out</Link>
                             </> : <>
-                                <Link to="/signin" className="font-bold bg-slate-300 rounded my-2">Login</Link>
-                                <Link to="/signup" className="font-bold bg-slate-300 rounded my-2">Register</Link>
+                                <Link to="/login" className="font-bold bg-slate-300 rounded my-2">Login</Link>
+                                <Link to="/register" className="font-bold bg-slate-300 rounded my-2">Register</Link>
 
                             </>}
 

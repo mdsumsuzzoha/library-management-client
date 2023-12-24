@@ -10,6 +10,7 @@ import AddBookForm from "../pages/AddBookForm/AddBookForm";
 import AllBook from "../pages/AllBook/AllBook";
 import BooksByCat from "../pages/BooksByCat/BooksByCat";
 import BookDetails from "../pages/BookDetails/BookDetails";
+import BorrowedBooks from "../pages/BorrowedBooks/BorrowedBooks";
 
 
 
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
             {
                 path: '/bookDetails/:id',
                 element: <BookDetails></BookDetails>
+            },
+            {
+                path: '/borrowed',
+                element: <BorrowedBooks></BorrowedBooks>
             },
             
             {
