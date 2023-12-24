@@ -1,26 +1,72 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../providers/AuthProviders";
+import { useContext, useEffect, useState, } from "react";
 import BorrowBookCard from "./BorrowBookCard";
+import { DataContext } from "../../providers/DataProvider";
+import Swal from "sweetalert2";
+import { AuthContext } from "../../providers/AuthProviders";
 
 const BorrowedBooks = () => {
-    const { user, setLoading } = useContext(AuthContext);
-    // const [userRender, setUserRender] = useState(user);
-    const [borrowBooks, setBorrowBooks] = useState([]);
-    console.log(user?.email);
-    console.log(borrowBooks);
 
-
-    const url = `http://localhost:5000/borrowed?email=${user?.email}`
-    useEffect(() => {
+    // borrow books data from DataProviders bt using DataContext;
+    const {setLoading} =useContext(AuthContext);
+    const { borrowBooks } = useContext(DataContext);
+    const [borrowBooksRe, setBorrowBooksRe] = useState(borrowBooks);
+    useEffect(()=>{
         setLoading(true);
-        fetch(url)
-            .then(res => res.json())
-            .then(data => setBorrowBooks(data))
-    }, [user])
-    console.log(borrowBooks);
+        setBorrowBooksRe(borrowBooks);
+    },[borrowBooks])
 
-    const handleReturn = id => {
-        console.log(id);
+
+    // setBorrowBooksRe(...borrowBooksRe, borrowBooks);
+
+    console.log(borrowBooksRe);
+    const handleReturn = (id, bookId) => {
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Return"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // increase book qty by return the book
+                fetch(`http://localhost:5000/books/${bookId}/increase`, {
+                    method: 'PATCH',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({ _id: bookId })
+                });
+                // console.log(bookId);
+
+                // delete book from borrowed qty by return the book
+                fetch(`http://localhost:5000/borrowed/${id}`, {
+                    method: 'DELETE'
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        // console.log(data)
+                        if (data.deletedCount > 0) {
+                            const remaining = borrowBooksRe.filter(borrowBook=>borrowBook._id !== id);
+                            setBorrowBooksRe(remaining);
+                            Swal.fire({
+                                title: "Returned",
+                                text: "Your Book has been Returned.",
+                                icon: "success"
+                            });
+                        }
+
+                    })
+
+            }
+        });
+        //   .then((result) => {
+
+        //     if (result.isConfirmed) {
+
+        //       window.location.href = '/';
+        //     }
+        //   });
         // fetch(`http://localhost:5000/borrowed?email=${id}`, {
         //     method: 'DELETE'
         // })
@@ -54,12 +100,12 @@ const BorrowedBooks = () => {
                     </thead>
                     <tbody>
                         {
-                            borrowBooks.map((borrowBook, idx) =>  <BorrowBookCard
+                            borrowBooksRe.map((borrowBook, idx) => <BorrowBookCard
                                 key={borrowBook._id}
                                 idx={idx}
                                 borrowBook={borrowBook}
                                 handleReturn={handleReturn}
-                                ></BorrowBookCard>)
+                            ></BorrowBookCard>)
                         }
                     </tbody>
                 </table>

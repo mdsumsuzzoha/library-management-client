@@ -4,11 +4,15 @@ import { AuthContext } from "../../providers/AuthProviders";
 import Swal from "sweetalert2";
 import Modal from "react-responsive-modal";
 import 'react-responsive-modal/styles.css';
+import { DataContext } from "../../providers/DataProvider";
 
 const BookDetails = () => {
     const { id } = useParams();
     const { user, setLoading } = useContext(AuthContext);
-    // console.log(user?.displayName);
+    const { borrowBooks } = useContext(DataContext);
+
+    // const [borrowBooksRe, setBorrowBooksRe] = useState(borrowBooks);
+    // console.log(borrowBooksRe);
 
     const [bookDetails, setBookDetails] = useState([]);
     const [open, setOpen] = useState(false);
@@ -22,8 +26,22 @@ const BookDetails = () => {
         fetch(`http://localhost:5000/books/${id}`)
             .then(res => res.json())
             .then(data => setBookDetails(data))
-    }, [])
+    }, [open])
 
+
+
+    const handleBorrow = () => {
+        const checkAlredyBorrowed = borrowBooks.filter(borrowBook => borrowBook.bookId === _id)
+        console.log(checkAlredyBorrowed);
+        if (checkAlredyBorrowed.length <1) {            
+            return onOpenModal();
+        }
+        Swal.fire({
+            title: "Already Borrowed this book",
+            icon: "warning"
+        });
+
+    }
 
     const handleBorrowSubmit = (e) => {
         e.preventDefault();
@@ -48,8 +66,10 @@ const BookDetails = () => {
             returnDate,
             description,
         }
-        console.log(borrow);
-        // console.log('inside from Modal')
+        // console.log(borrow);
+
+
+
         Swal.fire({
             title: "Are you sure?",
             icon: "warning",
@@ -70,16 +90,16 @@ const BookDetails = () => {
                     .then(data => {
                         // console.log(data)
                         if (data.insertedId) {
-                            fetch(`http://localhost:5000/books/${_id}`, {
+                            fetch(`http://localhost:5000/books/${_id}/decrease`, {
                                 method: 'PATCH',
                                 headers: {
                                     'content-type': 'application/json'
                                 },
-                                body: JSON.stringify({ id: _id })
+                                body: JSON.stringify({ _id: _id })
                             })
                                 .then(res => res.json())
                                 .then(data => {
-                                    console.log(data);
+                                    // console.log(data);
                                     if (data) {
                                         Swal.fire({
                                             title: "Submited",
@@ -97,6 +117,7 @@ const BookDetails = () => {
     }
 
     const handleRead = async () => {
+
 
     }
 
@@ -139,7 +160,7 @@ const BookDetails = () => {
                             </table>
                         </div>
                         <div className="grid grid-cols-2 gap-6 w-64">
-                            <button onClick={onOpenModal} className="btn btn-outline btn-secondary"
+                            <button onClick={handleBorrow} className="btn btn-outline btn-secondary"
                                 disabled={qty < 1}
                             >Borrow</button>
                             <button onClick={handleRead} className="btn btn-outline btn-info">Read Now</button>
@@ -152,7 +173,7 @@ const BookDetails = () => {
 
                 <div >
                     <Modal open={open} onClose={onCloseModal} center
-                     >
+                    >
                         <div >
                             <form onSubmit={handleBorrowSubmit} className="card-body w-full">
                                 <div className="form-control">

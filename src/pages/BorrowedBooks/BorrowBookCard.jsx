@@ -17,8 +17,8 @@ const BorrowBookCard = ({idx, borrowBook, handleReturn }) => {
                     </div>
                     <div>
                         <div className="font-bold text-lg">{borrowBook?.bookName}</div>
-                        <div className=" opacity-50">Author{borrowBook?.aurthor}</div>
-                        <div className=" opacity-50">Category:{borrowBook?.category}</div>
+                        <div className=" font-bold">{borrowBook?.author}</div>
+                        <div className=" opacity-50">Category: {borrowBook?.category}</div>
                     </div>
                 </div>
             </td>
@@ -35,14 +35,14 @@ const BorrowBookCard = ({idx, borrowBook, handleReturn }) => {
             {/* column 5 */}
             <td>{borrowBook?.returnDate}</td>
             <th>
-                <button onClick={()=>handleReturn(borrowBook._id)} className="btn btn-outline btn-warning">Return Now</button>
+                <button onClick={()=>handleReturn(borrowBook._id, borrowBook.bookId)} className="btn btn-outline btn-warning">Return Now</button>
             </th>
         </tr>
     );
 };
 BorrowBookCard.propTypes = {
     borrowBook: PropTypes.object,
-    idx: PropTypes.object,
+    idx: PropTypes.number,
     handleReturn: PropTypes.func,
   };
 export default BorrowBookCard;
