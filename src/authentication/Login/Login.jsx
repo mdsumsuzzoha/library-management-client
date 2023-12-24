@@ -85,7 +85,7 @@ const Login = () => {
                             <label className="label">
                                 <span className="label-text">Password</span>
                             </label>
-                            <input type={showpassword ? 'text' : "password"} name='password' placeholder="password" className="input input-bordered" required />
+                            <input type={showpassword ? 'text' : "password"} name='password' placeholder="password" className="input input-bordered bg-base-100" required />
                             <label className="label label-text-alt">
                                 <span><input onClick={() => setShowPassword(!showpassword)} type="checkbox" name="" id="1" /> Show Password</span>
                             </label>

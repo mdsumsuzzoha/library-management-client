@@ -11,6 +11,11 @@ const DataProvider = ({ children }) => {
     const { user } = useContext(AuthContext);
 
     const [borrowBooks, setBorrowBooks] = useState([]);
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    const toggleDarkMode = () => {
+        setIsDarkMode(!isDarkMode);
+    };
 
 
     const url = `http://localhost:5000/borrowed?email=${user?.email}`;
@@ -29,6 +34,8 @@ const DataProvider = ({ children }) => {
 
     const dataInfo = {
         borrowBooks,
+        isDarkMode,
+        toggleDarkMode,
 
     }
 

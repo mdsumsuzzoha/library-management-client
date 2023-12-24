@@ -11,6 +11,7 @@ import AllBook from "../pages/AllBook/AllBook";
 import BooksByCat from "../pages/BooksByCat/BooksByCat";
 import BookDetails from "../pages/BookDetails/BookDetails";
 import BorrowedBooks from "../pages/BorrowedBooks/BorrowedBooks";
+import PrivateRoutes from "./PrivateRoutes";
 
 
 
@@ -26,7 +27,9 @@ const router = createBrowserRouter([
             },
             {
                 path: '/addBook',
-                element: <AddBookForm></AddBookForm>
+                element: <PrivateRoutes>
+                    <AddBookForm></AddBookForm>
+                </PrivateRoutes>
             },
             {
                 path: '/allBook',
@@ -35,7 +38,7 @@ const router = createBrowserRouter([
             {
                 path: '/booksByCat/:cat',
                 element: <BooksByCat></BooksByCat>,
-                loader: ({params}) => fetch(`http://localhost:5000/booksByCat?category=${params.cat}`)
+                loader: ({ params }) => fetch(`http://localhost:5000/booksByCat?category=${params.cat}`)
             },
             {
                 path: '/bookDetails/:id',
@@ -45,7 +48,7 @@ const router = createBrowserRouter([
                 path: '/borrowed',
                 element: <BorrowedBooks></BorrowedBooks>
             },
-            
+
             {
                 path: '/contact',
                 element: <Contact></Contact>

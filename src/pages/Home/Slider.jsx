@@ -1,27 +1,23 @@
-import React, { useRef, useState } from 'react';
+// import React, { useRef, useState } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-// Install swiper 
-
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
-import './styles.css';
+// import './styles.css';
 
 // import required modules
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
-const Slider =()=>{
+const Slider = () => {
   return (
     <>
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
         autoplay={{
-          delay: 2500,
+          delay: 3000,
           disableOnInteraction: false,
         }}
         pagination={{
@@ -29,19 +25,21 @@ const Slider =()=>{
         }}
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
-        className="mySwiper"
+        className="mySwiper h-64 md:h-80 my-4 md:my-10 w-6/12 mx-auto rounded-lg"
       >
-        <SwiperSlide>Slide 1</SwiperSlide>
-        <SwiperSlide>Slide 2</SwiperSlide>
-        <SwiperSlide>Slide 3</SwiperSlide>
-        <SwiperSlide>Slide 4</SwiperSlide>
-        <SwiperSlide>Slide 5</SwiperSlide>
-        <SwiperSlide>Slide 6</SwiperSlide>
-        <SwiperSlide>Slide 7</SwiperSlide>
-        <SwiperSlide>Slide 8</SwiperSlide>
-        <SwiperSlide>Slide 9</SwiperSlide>
+        <SwiperSlide><img className='w-full object-cover' src="https://i.ibb.co/2yzy0ZK/slide2.jpg
+" alt="" /></SwiperSlide>
+        <SwiperSlide><img className='w-full object-cover' src="https://i.ibb.co/Ny2qPQP/slide4.jpg
+" alt="" /></SwiperSlide>
+        <SwiperSlide><img className='w-full object-cover' src="https://i.ibb.co/0sdjvXL/slide6.jpg
+" alt="" /></SwiperSlide>
+        <SwiperSlide><img className='w-full object-cover' src="https://i.ibb.co/G5m9TDh/slide1.jpg
+" alt="" /></SwiperSlide>
+        <SwiperSlide><img className='w-full object-cover' src="https://i.ibb.co/6RZTwrm/slide3.jpg" alt="" /></SwiperSlide>
+        <SwiperSlide><img className='w-full object-cover' src="https://i.ibb.co/5T73nzb/slide5.jpg
+" alt="" /></SwiperSlide>
       </Swiper>
     </>
   );
 }
-export default  Slider
+export default Slider

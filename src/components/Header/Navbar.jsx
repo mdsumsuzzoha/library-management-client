@@ -13,12 +13,12 @@ const Navbar = () => {
             .then()
             .catch()
     }
-    // const handleClick = () => {
-    //     const elem = document.activeElement;
-    //     if (elem) {
-    //         elem?.blur();
-    //     }
-    // };
+    const handleClick = () => {
+        const elem = document.activeElement;
+        if (elem) {
+            elem?.blur();
+        }
+    };
 
     const linkHorizontal = <>
         <li><NavLink to='/'>Home</NavLink></li>
@@ -60,23 +60,23 @@ const Navbar = () => {
     return (
         <div>
             <hr />
-            <div className="navbar py-6 ">
+            <div className="navbar py-6 px-4">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
                         </div>
-                        <ul onClick={'handleClick'} className="font-bold text-l  dropdown-content mt-3 z-[1] p-2 text-lg shadow bg-base-100 rounded-box w-60">
+                        <ul onClick={handleClick} className="font-bold text-  dropdown-content mt-3 z-[1] p-2 text-lg shadow bg-base-100 rounded-box w-60">
                             {linksVartical}
                         </ul>
                     </div>
-                    <img className="w-44 px-4" src="https://i.ibb.co/VvKNt6S/carlogo2.png" alt="" />
-                    <h2 className="hidden md:block text-5xl font-bold  flex gap-4 "><span><span className="text-red-600">CAR </span>SHOP</span> </h2>
+                    <img className="w-44 px-4" src="https://i.ibb.co/2cxKWm7/pngwing-com.png" alt="" />
+                    <h2 className="hidden md:block text-5xl font-bold  flex gap-4 "><span><span className="">ABC </span>Library</span> </h2>
 
                 </div>
                 <div className="navbar-end md:gap-14">
                     <div className="hidden lg:flex">
-                        <ul onClick={'handleClick'} className="menu-horizontal text-lg font-bold tracking-wide px-1 space-x-6">
+                        <ul onClick={handleClick} className="menu-horizontal  font-bold tracking-wide px-1 space-x-6">
                             {linkHorizontal}
                         </ul>
                     </div>

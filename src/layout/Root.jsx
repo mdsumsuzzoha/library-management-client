@@ -1,14 +1,21 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Header/Navbar";
+import Banner from "../components/Header/Banner";
+import { useContext } from "react";
+import { DataContext } from "../providers/DataProvider";
+import Footer from "../components/Footer/Footer";
 
 
 const Root = () => {
+    const { isDarkMode, } = useContext(DataContext);
+
 
     return (
-        <div className="">
+        <div className={`bg-${isDarkMode ? 'black' : ''} text-${isDarkMode ? 'white' : ''}`}>
+            <Banner></Banner>
             <Navbar></Navbar>
             <Outlet></Outlet>
-            {/* <Footer></Footer> */}
+            <Footer></Footer>
         </div>
     );
 };
