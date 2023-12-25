@@ -4,45 +4,63 @@ import { AuthContext } from "../../providers/AuthProviders";
 import Swal from "sweetalert2";
 import Modal from "react-responsive-modal";
 import 'react-responsive-modal/styles.css';
-import { DataContext } from "../../providers/DataProvider";
+import axios from "axios";
+// import { DataContext } from "../../providers/DataProvider";
 
 const BookDetails = () => {
     const { id } = useParams();
-    const { user, setLoading } = useContext(AuthContext);
-    const { borrowBooks } = useContext(DataContext);
+    const { user, } = useContext(AuthContext);
+    // const { borrowBooks } = useContext(DataContext);
 
     // const [borrowBooksRe, setBorrowBooksRe] = useState(borrowBooks);
     // console.log(borrowBooksRe);
+
+    const [borrowedBooks, setBorrowedBooks] = useState([]);
+
 
     const [bookDetails, setBookDetails] = useState([]);
     const [open, setOpen] = useState(false);
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
     // console.log(bookDetails);
+
     const { _id, img, name, category, author, description, qty, publisher, published_date, pages, } = bookDetails;
 
     useEffect(() => {
-        setLoading(true);
         fetch(`http://localhost:5000/books/${id}`)
             .then(res => res.json())
             .then(data => setBookDetails(data))
     }, [open])
 
+    const url = `http://localhost:5000/borrowed?email=${user?.email}`;
+    useEffect(() => {
+        axios.get(url, { withCredentials: true })
+            .then(res => {
+                setBorrowedBooks(res.data);
+            })
+            .catch(error => {
+                // Handle error here
+                console.error('Error fetching borrowed books:', error);
+                // You can set an error state here if needed
+            });
+    }, []);
 
-
+    // handle borrow btn and show a modal
     const handleBorrow = () => {
-        const checkAlredyBorrowed = borrowBooks.filter(borrowBook => borrowBook.bookId === _id)
-        console.log(checkAlredyBorrowed);
-        if (checkAlredyBorrowed.length <1) {            
+        const checkAlredyBorrowed = borrowedBooks.filter(borrowBook => borrowBook.bookId === _id)
+        // console.log(checkAlredyBorrowed);
+        if (checkAlredyBorrowed.length < 1) {
             return onOpenModal();
         }
         Swal.fire({
-            title: "Already Borrowed this book",
-            icon: "warning"
+            title: "Try others..",
+            text: "You already Borrowed this book",
+            icon: "error"
         });
 
     }
 
+    // hendle submit to borrow book after input return date
     const handleBorrowSubmit = (e) => {
         e.preventDefault();
         const form = e.target;
@@ -50,9 +68,6 @@ const BookDetails = () => {
         const bookDebtor = form.name.value;
         const returnDate = form.date.value;
         const borrowDate = new Date().toISOString().split('T')[0];
-
-        // console.log('borrow', borrowDate);
-        // console.log('return', returnDate);
 
         const borrow = {
             bookId: _id,
@@ -66,9 +81,6 @@ const BookDetails = () => {
             returnDate,
             description,
         }
-        // console.log(borrow);
-
-
 
         Swal.fire({
             title: "Are you sure?",
@@ -79,6 +91,7 @@ const BookDetails = () => {
             confirmButtonText: "Yes, Submit"
         }).then((result) => {
             if (result.isConfirmed) {
+                // add to server this book info in borrow
                 fetch('http://localhost:5000/borrowed', {
                     method: 'POST',
                     headers: {
@@ -90,6 +103,7 @@ const BookDetails = () => {
                     .then(data => {
                         // console.log(data)
                         if (data.insertedId) {
+                            // once borrow a book success then decrease the qty of that book in database
                             fetch(`http://localhost:5000/books/${_id}/decrease`, {
                                 method: 'PATCH',
                                 headers: {

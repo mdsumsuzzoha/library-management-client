@@ -1,19 +1,19 @@
-.product {
+.book-cointainer {
     width: 300px;
-    height: 510px;
+    height: 480px;
     border: 1px solid #95A0A7;
     border-radius: 8px;
     position: relative;
 }
 
-.product img {
+.book-cointainer img {
     width: 286px;
     height: 286px;
     margin: 7px;
     border-radius: 8px;
 }
 
-.product-name {
+.book-name {
     margin-top: 0px;
     margin-bottom: 0px;
     font-family: 'Lato';
@@ -24,20 +24,24 @@
     letter-spacing: 0.0015em;
     color: orange;
 }
-.product-info{
+.book-info{
     margin-left: 14px;
 }
-.product-info p{
+.book-info p{
     margin-top: 5px;
 }
-.btn-cart{
+.btn-detail{
     width: 100%;
-    background: #FFE0B3;
+    padding: 4px 0;
+    font-weight: 600;
+    background: #5e87ff;
     border: 1px solid #95A0A7;
     border-radius: 0px 0px 8px 8px;
     position: absolute;
     bottom: 0;
 }
-.btn-cart:hover{
-    background-color: orange;
+.btn-detail:hover{
+    font-weight: 600;
+    background-color: rgb(10, 89, 178);
+    color: white;
 }

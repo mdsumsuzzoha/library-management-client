@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import BookRating from "../BookRatings/BookRatings";
+import './BooksByCat.css';
 
 const BooksByCat = () => {
     const { cat } = useParams();
@@ -9,23 +11,26 @@ const BooksByCat = () => {
     useEffect(() => {
         fetch(url)
             .then(res => res.json())
-            .then(data => setBooks(data))
+            .then(data => {
+                setBooks(data)
+            })
     }, [])
+
+
 
     // console.log(cat);
     // console.log(books);
     return (<div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-6">
         {books.map(book => <div key={book._id}
-            className="product bg-base-100 shadow-xl" >
+            className="book-cointainer bg-base-100 shadow-xl" >
             <img src={book?.img} alt="" className="" />
-            <div className='product-info'>
-                <h6 className='product-name'>{book?.name}</h6>
+            <div className='book-info'>
+                <h6 className='book-name'>{book?.name}</h6>
                 <p>{book?.author}</p>
                 <p>Category: {book?.category}</p>
-                <p>Rating: {book?.rating} Stars</p>
-                {/* <BookRating rating={rating} ></BookRating> */}
+                <BookRating rating={book.rating}></BookRating>
             </div>
-            <Link to={`/bookDetails/${book._id}`} ><button className='btn-cart'>Details</button></Link>
+            <Link to={`/bookDetails/${book._id}`} ><button className='btn-detail'>Details</button></Link>
 
         </div >
         )}

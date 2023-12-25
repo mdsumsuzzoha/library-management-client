@@ -7,18 +7,22 @@ import { AuthContext } from "../../providers/AuthProviders";
 const BorrowedBooks = () => {
 
     // borrow books data from DataProviders bt using DataContext;
-    const {setLoading} =useContext(AuthContext);
+    const {loading, } =useContext(AuthContext);
     const { borrowBooks } = useContext(DataContext);
     const [borrowBooksRe, setBorrowBooksRe] = useState(borrowBooks);
+
     useEffect(()=>{
-        setLoading(true);
-        setBorrowBooksRe(borrowBooks);
+        // setLoading(true);
+        // setBorrowBooksRe(borrowBooks);
     },[borrowBooks])
 
 
-    // setBorrowBooksRe(...borrowBooksRe, borrowBooks);
+    if (loading) {
+        return <div className='p-10 flex justify-center'><span className="loading loading-dots loading-lg text-error"></span></div>
+    }
 
-    console.log(borrowBooksRe);
+    // console.log(borrowBooksRe);
+
     const handleReturn = (id, bookId) => {
         Swal.fire({
             title: "Are you sure?",

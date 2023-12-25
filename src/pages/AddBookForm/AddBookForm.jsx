@@ -1,40 +1,39 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useForm, } from 'react-hook-form';
+import Swal from 'sweetalert2';
 // import axios from 'axios';
 
+
 const AddBookForm = () => {
-  const [formData, setFormData] = useState({
-    image: '',
-    name: '',
-    quantity: 0,
-    author: '',
-    category: '',
-    description: '',
-    rating: 0,
-  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const { register, handleSubmit, formState: { errors }, reset, } = useForm();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    // try {
-    //   const response = await axios.post('/api/books', formData);
-    //   console.log('New book added:', response.data);
-    //   // Optionally, perform other actions after adding the book
-    // } catch (error) {
-    //   console.error('Error adding book:', error);
-    // }
-  };
+  const handleAddBook = async(data)=> {
+    //console.log(data)
+    const bookInfo = data;
+       try { 
+       axios.post('http://localhost:5000/addBook', bookInfo, {withCredentials:true})
+       .then(res=>{
+          //  console.log(res.data)
+           if(res.data.insertedId){
+            reset();
+            Swal.fire({
+              title: "Succeded",
+              text: "Your Book has been added.",
+              icon: "success"
+            });
+              // console.log('add book succedd')
+           }
+       })
+
+       } catch (error) {
+       console.log(error)
+     }}
 
   return (
     <div className="card shrink-0 w-full max-w-5xl shadow-2xl mx-auto bg-base-100">
-      <form onSubmit={handleSubmit} className="card-body">
+      <form onSubmit={handleSubmit(handleAddBook)} className="card-body">
         <div className='grid grid-cols-2 gap-6'>
           {/* Books Name */}
           <div className="form-control">
@@ -42,10 +41,8 @@ const AddBookForm = () => {
               <span className="label-text">Name</span>
             </label>
             <input type="text"
-              name="name"
+              {...register("name")}
               placeholder="Name"
-              value={formData.name}
-              onChange={handleChange}
               className="input input-bordered" required />
           </div>
           {/* Author Name section */}
@@ -54,10 +51,8 @@ const AddBookForm = () => {
               <span className="label-text">Author Name</span>
             </label>
             <input type="text"
-              name="author"
+              {...register("author")}
               placeholder="Author"
-              value={formData.author}
-              onChange={handleChange}
               className="input input-bordered" required />
           </div>
         </div>
@@ -69,9 +64,8 @@ const AddBookForm = () => {
               <span className="label-text">Category </span>
             </label>
             <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
+              {...register("category", { required: true })}
+              aria-invalid={errors.category ? "true" : "false"}
               className="input input-bordered"
             >
               <option value="">Select Category</option>
@@ -82,6 +76,7 @@ const AddBookForm = () => {
               <option value="Sci-Fi">Sci-Fi</option>
               {/* Add other category options */}
             </select>
+            {errors.category?.type === 'required' && <p className='text-red-500' role="alert">Select a Category</p>}
           </div>
           {/* Books Cover Image section */}
           <div className="form-control">
@@ -89,10 +84,8 @@ const AddBookForm = () => {
               <span className="label-text">Book Image</span>
             </label>
             <input type="text"
-              name="image"
+              {...register("img")}
               placeholder="Image URL"
-              value={formData.image}
-              onChange={handleChange}
               className="input input-bordered" required />
           </div>
         </div>
@@ -102,13 +95,13 @@ const AddBookForm = () => {
           <label className="label">
             <span className="label-text">Short description</span>
           </label>
-          <textarea
-            type="text"
-            name="description"
-            placeholder="Short Description"
-            value={formData.description}
-            onChange={handleChange}
-            className="textarea textarea-bordered"></textarea>
+            <input type="text"
+              {...register("description", { maxLength: 200 })}
+              aria-invalid={errors.rating ? 'true' : "false"}
+              placeholder="Short description"
+              className="input input-bordered" required />
+            {errors.description && <p role="alert" className='text-red-500'>Enter description maximum 200 characters</p>}
+
         </div>
 
         <div className='grid grid-cols-2 gap-6'>
@@ -118,11 +111,12 @@ const AddBookForm = () => {
               <span className="label-text">Quantity</span>
             </label>
             <input type="number"
-              name="quantity"
+              {...register("qty", { min: 0, })}
+              aria-invalid={errors.qty ? 'true' : "false"}
               placeholder="Quantity of the book"
-              value={formData.quantity}
-              onChange={handleChange}
               className="input input-bordered" required />
+            {errors.qty && <p role="alert" className='text-red-500'>Qty should not be negative value</p>}
+
           </div>
           {/* Rating section */}
           <div className="form-control">
@@ -130,20 +124,13 @@ const AddBookForm = () => {
               <span className="label-text">Rating </span>
             </label>
             <input type="number"
-              name="rating"
+              {...register("rating", { min: 0, max: 5 })}
+              aria-invalid={errors.rating ? 'true' : "false"}
               placeholder="Rating"
-              value={formData.rating}
-              onChange={handleChange}
               className="input input-bordered" required />
+            {errors.rating && <p role="alert" className='text-red-500'>Rating must be entered 0 to 5</p>}
           </div>
         </div>
-        {/*  */}
-        {/* <div className="form-control">
-          <label className="label">
-            <span className="label-text">Email</span>
-          </label>
-          <input type="email" placeholder="email" className="input input-bordered" required />
-        </div> */}
         <div className="form-control mt-6">
           <button type="submit" className="btn btn-primary">Add Book</button>
         </div>

@@ -11,7 +11,7 @@ const BookCategory = () => {
         <div className="card-body items-center text-center">
           <h2 className="card-title">Fantasy</h2>
           <div className="card-actions">
-            <Link to={`/booksByCat/${"Fantasy"}`} ><button className="btn btn-outline btn-info btn-sm">See Books</button></Link>
+            <Link to={`/booksByCat/${'Fantasy'}`} ><button className="btn btn-outline btn-info btn-sm">See Books</button></Link>
           </div>
         </div>
       </div >

@@ -29,7 +29,7 @@ const Login = () => {
                 // ?get access tocken 
                 axios.post('http://localhost:5000/jwt', user, {withCredentials:true})
                 .then(res=>{
-                    // console.log(res.data)
+                    console.log(res.data)
                     if(res.data.success){
                         navigate(location?.state ? location.state : '/')
                     }
