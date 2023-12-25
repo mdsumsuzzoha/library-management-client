@@ -1,42 +1,19 @@
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import PropTypes from 'prop-types';
-// import { AuthContext } from "./AuthProviders";
-// import axios from "axios";
 
 
 export const DataContext = createContext(null);
 
 const DataProvider = ({ children }) => {
-    // const {user, setLoading } = useContext(AuthContext);
-
-    // const [borrowBooks, setBorrowBooks] = useState([]);
-
+    
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     const toggleDarkMode = () => {
         setIsDarkMode(!isDarkMode);
     };
 
-
-    // const url = `http://localhost:5000/borrowed?email=${user?.email}`;
-    // useEffect(() => {
-    //     // setLoading(true);
-    //     axios.get(url, { withCredentials: true })
-    //         .then(res => {
-    //             // setLoading(false);
-    //             setBorrowBooks(res.data);
-    //         })
-    //     // fetch(url)
-    //     //     .then(res => res.json())
-    //     //     .then(data => setBorrowBooks(data))
-    // }, [user])
-    // // console.log(borrowBooks);
-
-
-
     const dataInfo = {
-        // borrowBooks,
         isDarkMode,
         toggleDarkMode,
 

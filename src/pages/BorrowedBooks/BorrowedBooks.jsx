@@ -1,25 +1,33 @@
-import { useContext, useEffect, useState, } from "react";
+import {  useContext, useEffect, useState, } from "react";
 import BorrowBookCard from "./BorrowBookCard";
-import { DataContext } from "../../providers/DataProvider";
 import Swal from "sweetalert2";
+import axios from "axios";
 import { AuthContext } from "../../providers/AuthProviders";
 
 const BorrowedBooks = () => {
 
     // borrow books data from DataProviders bt using DataContext;
-    const {loading, } =useContext(AuthContext);
-    const { borrowBooks } = useContext(DataContext);
-    const [borrowBooksRe, setBorrowBooksRe] = useState(borrowBooks);
+    const {user } =useContext(AuthContext);
 
-    useEffect(()=>{
-        // setLoading(true);
-        // setBorrowBooksRe(borrowBooks);
-    },[borrowBooks])
+    const [borrowedBooks, setBorrowedBooks] = useState([]);
 
 
-    if (loading) {
-        return <div className='p-10 flex justify-center'><span className="loading loading-dots loading-lg text-error"></span></div>
-    }
+    const url = `http://localhost:5000/borrowed?email=${user?.email}`;
+    useEffect(() => {
+        axios.get(url, { withCredentials: true })
+            .then(res => {
+                setBorrowedBooks(res.data);
+            })
+            .catch(error => {
+                // Handle error here
+                console.error('Error fetching borrowed books:', error);
+                // You can set an error state here if needed
+            });
+    }, []);
+
+    // if (loading) {
+    //     return <div className='p-10 flex justify-center'><span className="loading loading-dots loading-lg text-error"></span></div>
+    // }
 
     // console.log(borrowBooksRe);
 
@@ -51,8 +59,8 @@ const BorrowedBooks = () => {
                     .then(data => {
                         // console.log(data)
                         if (data.deletedCount > 0) {
-                            const remaining = borrowBooksRe.filter(borrowBook=>borrowBook._id !== id);
-                            setBorrowBooksRe(remaining);
+                            const remaining = borrowedBooks.filter(borrowBook=>borrowBook._id !== id);
+                            setBorrowedBooks(remaining);
                             Swal.fire({
                                 title: "Returned",
                                 text: "Your Book has been Returned.",
@@ -104,7 +112,7 @@ const BorrowedBooks = () => {
                     </thead>
                     <tbody>
                         {
-                            borrowBooksRe.map((borrowBook, idx) => <BorrowBookCard
+                            borrowedBooks.map((borrowBook, idx) => <BorrowBookCard
                                 key={borrowBook._id}
                                 idx={idx}
                                 borrowBook={borrowBook}

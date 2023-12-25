@@ -16,10 +16,6 @@ const BooksByCat = () => {
             })
     }, [])
 
-
-
-    // console.log(cat);
-    // console.log(books);
     return (<div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-6">
         {books.map(book => <div key={book._id}
             className="book-cointainer bg-base-100 shadow-xl" >

@@ -13,6 +13,7 @@ import BookDetails from "../pages/BookDetails/BookDetails";
 import BorrowedBooks from "../pages/BorrowedBooks/BorrowedBooks";
 import PrivateRoutes from "./PrivateRoutes";
 import BookRating from "../pages/BookRatings/BookRatings";
+import UpdateBook from "../UpdateBook/UpdateBook";
 
 
 
@@ -34,7 +35,15 @@ const router = createBrowserRouter([
             },
             {
                 path: '/allBook',
-                element: <AllBook></AllBook>
+                element: <PrivateRoutes>
+                    <AllBook></AllBook>
+                </PrivateRoutes>
+            },
+            {
+                path: '/bookUpdate/:id',
+                element: <PrivateRoutes>
+                    <UpdateBook></UpdateBook>
+                </PrivateRoutes>
             },
             {
                 path: '/booksByCat/:cat',
@@ -49,7 +58,9 @@ const router = createBrowserRouter([
             },
             {
                 path: '/borrowed',
-                element: <BorrowedBooks></BorrowedBooks>
+                element: <PrivateRoutes>
+                    <BorrowedBooks></BorrowedBooks>
+                </PrivateRoutes>
             },
 
             {

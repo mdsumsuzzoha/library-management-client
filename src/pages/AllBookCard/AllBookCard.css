@@ -1,0 +1,38 @@
+.card-book-cointainer {
+    width: 300px;
+    height: 510px;
+    border: 1px solid #95A0A7;
+    border-radius: 8px;
+    position: relative;
+}
+
+.card-book-cointainer img {
+    width: 286px;
+    height: 286px;
+    margin: 7px;
+    border-radius: 8px;
+}
+
+.card-book-name {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 21px;
+    line-height: 25px;
+    letter-spacing: 0.0015em;
+    color: orange;
+}
+.card-book-info{
+    margin-left: 14px;
+}
+.card-book-info p{
+    color: black;
+    margin-top: 5px;
+}
+.btn-container{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
