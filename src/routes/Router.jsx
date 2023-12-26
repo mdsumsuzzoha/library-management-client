@@ -6,7 +6,6 @@ import About from "../pages/About/About";
 import Contact from "../pages/Contact/Contact";
 import Register from "../authentication/Register/Register";
 import Login from "../authentication/Login/Login";
-import AddBookForm from "../pages/AddBookForm/AddBookForm";
 import AllBook from "../pages/AllBook/AllBook";
 import BooksByCat from "../pages/BooksByCat/BooksByCat";
 import BookDetails from "../pages/BookDetails/BookDetails";
@@ -14,6 +13,7 @@ import BorrowedBooks from "../pages/BorrowedBooks/BorrowedBooks";
 import PrivateRoutes from "./PrivateRoutes";
 import BookRating from "../pages/BookRatings/BookRatings";
 import UpdateBook from "../UpdateBook/UpdateBook";
+import AddBook from "../pages/AddBook/AddBook";
 
 
 
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
             {
                 path: '/addBook',
                 element: <PrivateRoutes>
-                    <AddBookForm></AddBookForm>
+                    <AddBook></AddBook>
                 </PrivateRoutes>
             },
             {
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
             {
                 path: '/booksByCat/:cat',
                 element: <BooksByCat></BooksByCat>,
-                // loader: ({ params }) => fetch(`http://localhost:5000/booksByCat?category=${params.cat}`)
+                // loader: ({ params }) => fetch(`https://library-management-server-flame.vercel.app/booksByCat?category=${params.cat}`)
             },
             {
                 path: '/bookDetails/:id',

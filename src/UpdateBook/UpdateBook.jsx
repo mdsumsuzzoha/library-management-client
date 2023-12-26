@@ -13,36 +13,31 @@ import { useParams } from 'react-router-dom';
 const UpdateBook = () => {
     const { id } = useParams();
     const [book, setBook] = useState([]);
-    const { name, author, category, img, description, qty, rating, ISBN, pages, publisher, language } = book;
-    const { control, register, handleSubmit, formState: { errors }, reset, } = useForm();
+    const { _id, name, author,  img, description, qty, rating, ISBN, pages, publisher, language } = book;
+    const { control, register, handleSubmit, formState: { errors }, reset,   } = useForm();
 
-    const url = `http://localhost:5000/books/${id}`;
+    const url = `https://library-management-server-flame.vercel.app/books/${id}`;
     useEffect(() => {
-        axios.get(url, { withCredentials: true })
+        axios.get(url,)
             .then(res => {
                 setBook(res.data);
-            }).catch(error => {
-                // Handle error here
-                console.error('Error fetching borrowed books:', error);
-                // You can set an error state here if needed
-            });
+            }).catch()
+            ;
     }, [])
-    console.log(book);
-
 
 
     const handleAddBook = async (data) => {
-        //console.log(data)
+        // console.log(data)
         const bookInfo = data;
         try {
-            axios.put(`http://localhost:5000/books/${id}`, bookInfo, { withCredentials: true })
+            axios.put(`https://library-management-server-flame.vercel.app/books/${_id}`, bookInfo,)
                 .then(res => {
                     console.log(res.data)
-                    if (res.data.insertedId) {
+                    if (res.data.modifiedCount > 0) {
                         reset();
                         Swal.fire({
                             title: "Succeded",
-                            text: "Your Book has been added.",
+                            text: "Your Book has been Updated.",
                             icon: "success"
                         });
                         // console.log('add book succedd')
@@ -53,6 +48,16 @@ const UpdateBook = () => {
             console.log(error)
         }
     }
+
+
+    // Maximum words allowed in short desc
+    const maxWords = 50;
+    const validateWordCount = (input) => {
+        const wordCount = input.trim().split(/\s+/).filter(Boolean).length; // Count words (exclude empty strings)
+        return wordCount <= maxWords || `Please enter a description with a maximum of ${maxWords} words`;
+    };
+
+
 
     return (
         <div className="card shrink-0 w-full max-w-5xl shadow-2xl mx-auto bg-base-100">
@@ -65,6 +70,7 @@ const UpdateBook = () => {
                         </label>
                         <input type="text"
                             {...register("name")}
+                            defaultValue={name}
                             placeholder="Name"
                             className="input input-bordered" required />
                     </div>
@@ -75,6 +81,7 @@ const UpdateBook = () => {
                         </label>
                         <input type="text"
                             {...register("author")}
+                            defaultValue={author}
                             placeholder="Author"
                             className="input input-bordered" required />
                     </div>
@@ -96,6 +103,7 @@ const UpdateBook = () => {
                             <option value="Thriller">Thriller</option>
                             <option value="History">History</option>
                             <option value="Drama">Drama</option>
+                            <option value="Fantasy">Fantasy</option>
                             <option value="Sci-Fi">Sci-Fi</option>
                             {/* Add other category options */}
                         </select>
@@ -108,6 +116,7 @@ const UpdateBook = () => {
                         </label>
                         <input type="text"
                             {...register("img")}
+                            defaultValue={img}
                             placeholder="Image URL"
                             className="input input-bordered" required />
                     </div>
@@ -118,12 +127,20 @@ const UpdateBook = () => {
                     <label className="label">
                         <span className="label-text">Short description</span>
                     </label>
-                    <input type="text"
-                        {...register("description", { maxLength: 200 })}
-                        aria-invalid={errors.rating ? 'true' : "false"}
+                    <textarea
+                        id="description"
+                        {...register('description', { validate: validateWordCount })}
+                        defaultValue={description}
+                        aria-invalid={errors.description ? 'true' : 'false'}
                         placeholder="Short description"
-                        className="input input-bordered" required />
-                    {errors.description && <p role="alert" className='text-red-500'>Enter description maximum 200 characters</p>}
+                        className="input input-bordered"
+                        required
+                    />
+                    {errors.description && (
+                        <p role="alert" className="text-red-500">
+                            {errors.description.message}
+                        </p>
+                    )}
 
                 </div>
 
@@ -133,12 +150,21 @@ const UpdateBook = () => {
                         <label className="label">
                             <span className="label-text">Quantity</span>
                         </label>
-                        <input type="number"
-                            {...register("qty", { min: 0, })}
-                            aria-invalid={errors.qty ? 'true' : "false"}
-                            placeholder="Quantity of the book"
-                            className="input input-bordered" required />
-                        {errors.qty && <p role="alert" className='text-red-500'>Qty should not be negative value</p>}
+                        <input
+                            type="text"
+                            {...register('qty', {
+                                pattern: {
+                                    value: /^\d+$/,
+                                    // value: /^[0-9]{1}$/, // Regular expression pattern for the format 00.00
+                                    message: "Enter positive number only & Don't use fraction!",
+                                },
+                            })}
+                            defaultValue={qty}
+                            className="input input-bordered"
+                        />
+                        {errors.qty && (
+                            <p style={{ color: 'red' }}>{errors.qty.message}</p>
+                        )}
 
                     </div>
                     {/* Rating section */}
@@ -146,12 +172,26 @@ const UpdateBook = () => {
                         <label className="label">
                             <span className="label-text">Rating </span>
                         </label>
-                        <input type="number"
-                            {...register("rating", { min: 0, max: 5 })}
-                            aria-invalid={errors.rating ? 'true' : "false"}
-                            placeholder="Rating"
-                            className="input input-bordered" required />
-                        {errors.rating && <p role="alert" className='text-red-500'>Rating must be entered 0 to 5</p>}
+                        <input
+                            type="text"
+                            {...register('rating', {
+                                pattern: {
+                                    value: /^[0-9]{1}\.[0-9]{1}$/, // Regular expression pattern for the format 00.00
+                                    message: 'Please enter a number in format 0.0',
+                                },
+                                validate: {
+                                    lessThanFive: (value) =>
+                                        parseFloat(value) <= 5 || 'Value must be less than or equal to 5',
+                                    greaterThanZero: (value) =>
+                                        parseFloat(value) >= 0 || 'Value must be greater than or equal to 0',
+                                },
+                            })}
+                            defaultValue={rating}
+                            className="input input-bordered"
+                        />
+                        {errors.rating && (
+                            <p style={{ color: 'red' }}>{errors.rating.message}</p>
+                        )}
                     </div>
 
                 </div>
@@ -159,19 +199,18 @@ const UpdateBook = () => {
                     {/* ISBN section */}
                     <div className="form-control">
                         <label className="label">
-                            <span className="label-text">Rating </span>
+                            <span className="label-text">ISBN Number </span>
                         </label>
                         <input type="text"
-                            {...register("ISBN", { min: 0, max: 5 })}
-                            aria-invalid={errors.ISBN ? 'true' : "false"}
+                            {...register("ISBN",)}
+                            defaultValue={ISBN}
                             placeholder="ISBN"
                             className="input input-bordered" />
-                        {errors.ISBN && <p role="alert" className='text-red-500'>error</p>}
                     </div>
                     {/* published_date section */}
                     <div className="form-control">
                         <label className="label">
-                            <span className="label-text">Rating </span>
+                            <span className="label-text">Published date </span>
                         </label>
                         <div className=''>
                             <Controller
@@ -192,14 +231,23 @@ const UpdateBook = () => {
                     {/* pages section */}
                     <div className="form-control">
                         <label className="label">
-                            <span className="label-text">Rating </span>
+                            <span className="label-text">Pages </span>
                         </label>
-                        <input type="number"
-                            {...register("pages", { min: 0, })}
-                            aria-invalid={errors.rating ? 'true' : "false"}
-                            placeholder="pages"
-                            className="input input-bordered" />
-                        {errors.pages && <p role="alert" className='text-red-500'>pages are not to be negative</p>}
+                        <input
+                            type="text"
+                            {...register('pages', {
+                                pattern: {
+                                    value: /^\d+$/,
+                                    // value: /^[0-9]{1}$/, // Regular expression pattern for the format 00.00
+                                    message: "Enter positive number only & Don't use fraction!",
+                                },
+                            })}
+                            defaultValue={pages}
+                            className="input input-bordered"
+                        />
+                        {errors.pages && (
+                            <p style={{ color: 'red' }}>{errors.pages.message}</p>
+                        )}
                     </div>
                 </div>
                 <div className='grid grid-cols-2 gap-6'>
@@ -208,8 +256,9 @@ const UpdateBook = () => {
                         <label className="label">
                             <span className="label-text">publisher </span>
                         </label>
-                        <input type="number"
+                        <input type="text"
                             {...register("publisher", { min: 0, max: 5 })}
+                            defaultValue={publisher}
                             aria-invalid={errors.publisher ? 'true' : "false"}
                             placeholder="publisher"
                             className="input input-bordered" />
@@ -222,6 +271,7 @@ const UpdateBook = () => {
                         </label>
                         <input type="text"
                             {...register("language", { min: 0, max: 5 })}
+                            defaultValue={language}
                             aria-invalid={errors.language ? 'true' : "false"}
                             placeholder="Language"
                             className="input input-bordered" />

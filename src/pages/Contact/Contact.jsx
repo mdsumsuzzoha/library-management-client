@@ -6,7 +6,7 @@ const Contact = () => {
         <div>
         <div className="min-h-full w-full pt-10 mx-auto ">
             <div className="flex flex-col items-center w-10/12 mx-auto lg:flex-row-reverse">
-                <img src='https://i.ibb.co/Rg7z1ck/pexels-albin-berlin-919073.jpg' className="max-w-sm rounded-lg shadow-2xl" />
+                <img src='https://i.ibb.co/5YgTc4j/Library-about2.jpg' className="max-w-sm rounded-lg shadow-2xl" />
                 <div className='flex flex-col gap-auto items-stretch'>
                     <h3 className="text-lg font-bold pt-10 text-slate-500 ">CONTACT US</h3>
                     <div className="flex flex-col items-stretch md:flex-row w-full ">
@@ -16,7 +16,7 @@ const Contact = () => {
                             </div>
                             <p className="mr-6">Provident cupiditate voluptatem etin. Quaerat fugiat ut assumenda excepturi
                                 exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                            <h1 className="text-lg md:text-2xl font-bold py-2">CAR shop</h1>
+                            <h1 className="text-lg md:text-2xl font-bold py-2"></h1>
                         </div>
                         <div className="flex flex-col w-full">
                             <div className="h-20 flex items-end pb-6">

@@ -4,32 +4,33 @@ import Swal from 'sweetalert2';
 // import axios from 'axios';
 
 
-const AddBookForm = () => {
+const AddBook = () => {
 
   const { register, handleSubmit, formState: { errors }, reset, } = useForm();
 
 
-  const handleAddBook = async(data)=> {
+  const handleAddBook = async (data) => {
     //console.log(data)
     const bookInfo = data;
-       try { 
-       axios.post('http://localhost:5000/addBook', bookInfo, {withCredentials:true})
-       .then(res=>{
-          //  console.log(res.data)
-           if(res.data.insertedId){
+    try {
+      axios.post('https://library-management-server-flame.vercel.app/addBook', bookInfo, )
+        .then(res => {
+           console.log(res.data)
+          if (res.data.insertedId) {
             reset();
             Swal.fire({
               title: "Succeded",
               text: "Your Book has been added.",
               icon: "success"
             });
-              // console.log('add book succedd')
-           }
-       })
+            // console.log('add book succedd')
+          }
+        })
 
-       } catch (error) {
-       console.log(error)
-     }}
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div className="card shrink-0 w-full max-w-5xl shadow-2xl mx-auto bg-base-100">
@@ -95,12 +96,12 @@ const AddBookForm = () => {
           <label className="label">
             <span className="label-text">Short description</span>
           </label>
-            <input type="text"
-              {...register("description", { maxLength: 200 })}
-              aria-invalid={errors.rating ? 'true' : "false"}
-              placeholder="Short description"
-              className="input input-bordered" required />
-            {errors.description && <p role="alert" className='text-red-500'>Enter description maximum 200 characters</p>}
+          <input type="text"
+            {...register("description", { maxLength: 200 })}
+            aria-invalid={errors.rating ? 'true' : "false"}
+            placeholder="Short description"
+            className="input input-bordered" required />
+          {errors.description && <p role="alert" className='text-red-500'>Enter description maximum 200 characters</p>}
 
         </div>
 
@@ -140,4 +141,4 @@ const AddBookForm = () => {
   );
 };
 
-export default AddBookForm;
+export default AddBook;

@@ -2,18 +2,24 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import BookRating from "../BookRatings/BookRatings";
 import './BooksByCat.css';
+import axios from "axios";
 
 const BooksByCat = () => {
     const { cat } = useParams();
     const [books, setBooks] = useState([]);
 
-    const url = `http://localhost:5000/booksByCat?category=${cat}`;
+    const url = `https://library-management-server-flame.vercel.app/booksByCat?category=${cat}`;
     useEffect(() => {
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                setBooks(data)
-            })
+        axios.get(url)
+        .then(res=>{
+            setBooks(res.data)
+            
+        })
+        // fetch(url)
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         setBooks(data)
+        //     })
     }, [])
 
     return (<div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-6">

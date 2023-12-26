@@ -27,23 +27,21 @@ const BookDetails = () => {
     const { _id, img, name, category, author, description, qty, publisher, published_date, pages, } = bookDetails;
 
     useEffect(() => {
-        fetch(`http://localhost:5000/books/${id}`)
-            .then(res => res.json())
-            .then(data => setBookDetails(data))
+        axios.get(`https://library-management-server-flame.vercel.app/books/${id}`)
+            .then(res => {
+                setBookDetails(res.data)
+            })
     }, [open])
 
-    const url = `http://localhost:5000/borrowed?email=${user?.email}`;
+    const url = `https://library-management-server-flame.vercel.app/borrowed?email=${user?.email}`;
     useEffect(() => {
-        axios.get(url, { withCredentials: true })
+        axios.get(url,)
             .then(res => {
                 setBorrowedBooks(res.data);
             })
-            .catch(error => {
-                // Handle error here
-                console.error('Error fetching borrowed books:', error);
-                // You can set an error state here if needed
-            });
-    }, []);
+            .catch();
+
+    }, [open]);
 
     // handle borrow btn and show a modal
     const handleBorrow = () => {
@@ -92,46 +90,32 @@ const BookDetails = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 // add to server this book info in borrow
-                fetch('http://localhost:5000/borrowed', {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify(borrow)
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        // console.log(data)
-                        if (data.insertedId) {
-                            // once borrow a book success then decrease the qty of that book in database
-                            fetch(`http://localhost:5000/books/${_id}/decrease`, {
-                                method: 'PATCH',
-                                headers: {
-                                    'content-type': 'application/json'
-                                },
-                                body: JSON.stringify({ _id: _id })
-                            })
-                                .then(res => res.json())
-                                .then(data => {
-                                    // console.log(data);
-                                    if (data) {
-                                        Swal.fire({
-                                            title: "Submited",
-                                            icon: "success"
-                                        });
-                                        onCloseModal();
-                                    }
-                                })
-
+                axios.patch(`https://library-management-server-flame.vercel.app/books/${_id}/decrease`)
+                    .then(res=>{
+                        console.log(res.data);
+                    });
+                axios.post('https://library-management-server-flame.vercel.app/borrowed', borrow)
+                    .then(res => {
+                        console.log(res.data);
+                        if (res.data.insertedId) {
+                            Swal.fire({
+                                title: "Submited",
+                                icon: "success"
+                            });
+                            onCloseModal();
                         }
                     })
+                    .catch();
 
             }
-        });
+        })
+
     }
 
-    const handleRead = async () => {
 
+
+    const handleRead = async () => {
+        console.log();
 
     }
 

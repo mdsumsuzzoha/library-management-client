@@ -1,9 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Header/Navbar";
-import Banner from "../components/Header/Banner";
 import { useContext } from "react";
 import { DataContext } from "../providers/DataProvider";
-import Footer from "../components/Footer/Footer";
 
 
 const Root = () => {
@@ -12,10 +10,10 @@ const Root = () => {
 
     return (
         <div className={`bg-${isDarkMode ? 'black' : ''} text-${isDarkMode ? 'white' : ''}`}>
-            <Banner></Banner>
-            <Navbar></Navbar>
-            <Outlet></Outlet>
-            <Footer></Footer>
+                <Navbar />
+            <div className={`mt-20`}>
+                <Outlet />
+            </div>
         </div>
     );
 };

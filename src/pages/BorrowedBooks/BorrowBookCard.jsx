@@ -1,5 +1,10 @@
 import PropTypes from 'prop-types';
 const BorrowBookCard = ({idx, borrowBook, handleReturn }) => {
+
+    const {_id, bookId} = borrowBook;
+    console.log(_id, bookId);
+
+
     return (
         <tr>
             {/* column 1 */}
@@ -35,7 +40,7 @@ const BorrowBookCard = ({idx, borrowBook, handleReturn }) => {
             {/* column 5 */}
             <td>{borrowBook?.returnDate}</td>
             <th>
-                <button onClick={()=>handleReturn(borrowBook._id, borrowBook.bookId)} className="btn btn-outline btn-warning">Return Now</button>
+                <button onClick={()=>handleReturn(_id, bookId)} className="btn btn-outline btn-warning">Return Now</button>
             </th>
         </tr>
     );

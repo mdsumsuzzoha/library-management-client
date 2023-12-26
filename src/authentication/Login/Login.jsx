@@ -25,15 +25,20 @@ const Login = () => {
             .then((result) => {
                 const loggedInUser = result.user;
                 console.log(loggedInUser);
-                const user = {email};
+                const user = { email };
                 // ?get access tocken 
-                axios.post('http://localhost:5000/jwt', user, {withCredentials:true})
-                .then(res=>{
-                    console.log(res.data)
-                    if(res.data.success){
-                        navigate(location?.state ? location.state : '/')
-                    }
-                })
+                axios.post('https://library-management-server-flame.vercel.app/jwt', user, { withCredentials: true })
+                    .then(res => {
+                        console.log(res.data)
+                        if (res.data.success) {
+                            Swal.fire({
+                                title: "Succeded!",
+                                text: "You'r login done",
+                                icon: "success"
+                            });
+                            navigate(location?.state ? location.state : '/')
+                        }
+                    })
 
             }
             )

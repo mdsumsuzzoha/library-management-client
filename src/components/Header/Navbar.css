@@ -1,0 +1,13 @@
+/* Nav.css */
+
+.nav-btn li a.active {
+  background-color: #e91c1c;
+  border-radius: 4px;
+  text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 2px;
+  align-items: center;
+  /* padding: 0 5px; */
+  color: rgb(255, 244, 244);
+}

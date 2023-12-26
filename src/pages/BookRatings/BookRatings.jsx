@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const BookRating = ({ rating }) => {
 
-    // const [value, setValue] = React.useState(rating);
+
     const formattedRating = parseFloat(rating).toFixed(1);
 
     return <div>
@@ -24,5 +24,6 @@ const BookRating = ({ rating }) => {
 
 BookRating.propTypes = {
     rating: PropTypes.number
+
 };
 export default BookRating;

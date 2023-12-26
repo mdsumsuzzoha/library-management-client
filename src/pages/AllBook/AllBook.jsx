@@ -8,9 +8,9 @@ const AllBook = () => {
     const [books, setBooks] = useState([]);
 
 
-    const url = `http://localhost:5000/allBooks`;
+    const url = `https://library-management-server-flame.vercel.app/allBooks`;
     useEffect(() => {
-        axios.get(url, { withCredentials: true })
+        axios.get(url,)
             .then(res => {
                 setBooks(res.data);
             }).catch(error => {
@@ -30,7 +30,7 @@ const AllBook = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`http://localhost:5000/allBooks/${_id}`, {
+                fetch(`https://library-management-server-flame.vercel.app/allBooks/${_id}`, {
                     method: 'DELETE'
                 })
                     .then(res => res.json())
@@ -54,17 +54,17 @@ const AllBook = () => {
 
 
     return (
-            <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-4 justify-items-center">
-                {
-                    books.map(book => (
-                        <AllBookCard
-                            key={book._id}
-                            book={book}
-                            handleDeleteBook={handleDeleteBook}
-                        ></AllBookCard>
-                    ))
-                }
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-4 justify-items-center">
+            {
+                books.map(book => (
+                    <AllBookCard
+                        key={book._id}
+                        book={book}
+                        handleDeleteBook={handleDeleteBook}
+                    ></AllBookCard>
+                ))
+            }
+        </div>
 
     );
 };
