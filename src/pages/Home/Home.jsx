@@ -1,3 +1,4 @@
+import Footer from "../../components/Footer/Footer";
 import BookCategory from "../BookCategory/BookCategory";
 import Slider from "./Slider";
 
@@ -14,6 +15,7 @@ const Home = () => {
                 
                 <Slider></Slider>
                 <BookCategory></BookCategory>
+                <Footer></Footer>
 
             </div>           
 

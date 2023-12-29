@@ -11,9 +11,9 @@ import BooksByCat from "../pages/BooksByCat/BooksByCat";
 import BookDetails from "../pages/BookDetails/BookDetails";
 import BorrowedBooks from "../pages/BorrowedBooks/BorrowedBooks";
 import PrivateRoutes from "./PrivateRoutes";
-import BookRating from "../pages/BookRatings/BookRatings";
-import UpdateBook from "../UpdateBook/UpdateBook";
 import AddBook from "../pages/AddBook/AddBook";
+import UpdateBook from "../pages/UpdateBook/UpdateBook";
+import PdfViewer from "../pdf/PdfViewer";
 
 
 
@@ -48,7 +48,6 @@ const router = createBrowserRouter([
             {
                 path: '/booksByCat/:cat',
                 element: <BooksByCat></BooksByCat>,
-                // loader: ({ params }) => fetch(`https://library-management-server-flame.vercel.app/booksByCat?category=${params.cat}`)
             },
             {
                 path: '/bookDetails/:id',
@@ -62,7 +61,6 @@ const router = createBrowserRouter([
                     <BorrowedBooks></BorrowedBooks>
                 </PrivateRoutes>
             },
-
             {
                 path: '/contact',
                 element: <Contact></Contact>
@@ -80,13 +78,13 @@ const router = createBrowserRouter([
                 element: <Login></Login>
             },
             {
-                path: '/test',
-                element: <BookRating></BookRating>
-            },
+                path: '/viewPdf/:id',
+                element: <PdfViewer></PdfViewer>
+            }
 
         ]
 
-    }
+    },
 ]);
 
 export default router;

@@ -2,9 +2,15 @@ import { Box, Rating, } from "@mui/material";
 import PropTypes from 'prop-types';
 
 const BookRating = ({ rating }) => {
-
-
-    const formattedRating = parseFloat(rating).toFixed(1);
+    // console.log(typeof rating)
+    
+    let formattedRating = 0;
+    if (typeof rating === 'number') {
+        formattedRating = parseFloat(rating.toFixed(1));
+    } else {
+        formattedRating = parseFloat(parseFloat(rating).toFixed(1));
+    }
+    // console.log(typeof formattedRating);
 
     return <div>
         <Box
@@ -15,8 +21,8 @@ const BookRating = ({ rating }) => {
 
             {/* This section for readonly ratings */}
             <div className="my-2 flex items-center ">
-                <p className="my-1 text-sm font-semibold">({formattedRating})</p>
                 <Rating name="read-only" value={formattedRating} precision={0.1} readOnly />
+                <p className="my-1 text-sm font-semibold">({formattedRating})</p>
             </div>
         </Box>
     </div>

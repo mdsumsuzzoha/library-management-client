@@ -3,7 +3,6 @@ import { AuthContext } from "../../providers/AuthProviders";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FcGoogle } from "react-icons/fc";
-import axios from "axios";
 
 
 const Login = () => {
@@ -23,22 +22,16 @@ const Login = () => {
 
         signInUser(email, password)
             .then((result) => {
-                const loggedInUser = result.user;
-                console.log(loggedInUser);
-                const user = { email };
-                // ?get access tocken 
-                axios.post('https://library-management-server-flame.vercel.app/jwt', user, { withCredentials: true })
-                    .then(res => {
-                        console.log(res.data)
-                        if (res.data.success) {
-                            Swal.fire({
-                                title: "Succeded!",
-                                text: "You'r login done",
-                                icon: "success"
-                            });
-                            navigate(location?.state ? location.state : '/')
-                        }
-                    })
+                // console.log(result);
+                if (result) {
+                    Swal.fire({
+                        title: "Succeded!",
+                        text: "You'r login done",
+                        icon: "success"
+                    });
+                    navigate(location?.state ? location.state : '/')
+                }
+                
 
             }
             )
@@ -77,7 +70,7 @@ const Login = () => {
         }} className="py-4 px-2"
         >
             <div className="min-h-max flex justify-center">
-                <div className="card shrink-0 w-full max-w-lg shadow-2xl bg-base-100">
+                <div className="card shrink-0 w-full max-w-lg shadow-2xl ">
                     <form onSubmit={handleLoginForm} className="card-body">
                         <h3 className="text-4xl font-semibold text-primary text-center">Login here</h3>
                         <div className="form-control">
@@ -107,7 +100,7 @@ const Login = () => {
                         <p >Do not have account? <span className="btn-link font-semibold "><Link to='/register'>Register Here</Link></span></p>
                         <div className="divider">OR</div>
                         <button onClick={handleGoogleLogin}
-                            className="btn btn-outline btn-xs sm:btn-sm md:btn-md ">
+                            className="btn btn-outline btn-md sm:btn-md md:btn-md ">
                             <span className="text-lg flex items-center">
                                 <FcGoogle />
                                 <span className="ms-4">Login with Google</span>

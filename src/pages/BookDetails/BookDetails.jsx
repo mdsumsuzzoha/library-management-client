@@ -1,47 +1,61 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProviders";
 import Swal from "sweetalert2";
 import Modal from "react-responsive-modal";
 import 'react-responsive-modal/styles.css';
 import axios from "axios";
+import { DataContext } from "../../providers/DataProvider";
+import BookRating from "../BookRating/BookRating";
 // import { DataContext } from "../../providers/DataProvider";
 
 const BookDetails = () => {
-    const { id } = useParams();
     const { user, } = useContext(AuthContext);
-    // const { borrowBooks } = useContext(DataContext);
+    const { dataLoading, setDataLoading, } = useContext(DataContext);
 
-    // const [borrowBooksRe, setBorrowBooksRe] = useState(borrowBooks);
-    // console.log(borrowBooksRe);
-
+    const { id } = useParams();
     const [borrowedBooks, setBorrowedBooks] = useState([]);
-
-
     const [bookDetails, setBookDetails] = useState([]);
+
+    // const [error, setError] = useState([]);
+
+
     const [open, setOpen] = useState(false);
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
     // console.log(bookDetails);
 
-    const { _id, img, name, category, author, description, qty, publisher, published_date, pages, } = bookDetails;
+    const { _id, img, name, category, author, description, qty, rating, publisher, publishedYear, pages, } = bookDetails;
+
+    
 
     useEffect(() => {
-        axios.get(`https://library-management-server-flame.vercel.app/books/${id}`)
+        axios.get(`https://library-management-server-flame.vercel.app/bookDetails/${id}`, { withCredentials: true })
             .then(res => {
-                setBookDetails(res.data)
+                // console.log(res.data)
+                setBookDetails(res.data);
+                if (res) {
+                    const url = `https://library-management-server-flame.vercel.app/borrowed?email=${user?.email}`;
+                    axios.get(url, { withCredentials: true })
+                        .then(res => {
+                            setBorrowedBooks(res.data);
+                            setDataLoading(false);
+                        })
+                        .catch(error => {
+                            return (error);
+
+                        });
+                }
             })
+            .catch(error => {
+                return (error);
+
+            });
     }, [open])
 
-    const url = `https://library-management-server-flame.vercel.app/borrowed?email=${user?.email}`;
-    useEffect(() => {
-        axios.get(url,)
-            .then(res => {
-                setBorrowedBooks(res.data);
-            })
-            .catch();
+    // console.log(error);
+    // console.log(error.errorCode);
 
-    }, [open]);
 
     // handle borrow btn and show a modal
     const handleBorrow = () => {
@@ -89,35 +103,59 @@ const BookDetails = () => {
             confirmButtonText: "Yes, Submit"
         }).then((result) => {
             if (result.isConfirmed) {
-                // add to server this book info in borrow
-                axios.patch(`https://library-management-server-flame.vercel.app/books/${_id}/decrease`)
-                    .then(res=>{
-                        console.log(res.data);
-                    });
-                axios.post('https://library-management-server-flame.vercel.app/borrowed', borrow)
+                // add to server this book info in borrow                
+                axios.post('https://library-management-server-flame.vercel.app/borrowed', borrow, { withCredentials: true })
                     .then(res => {
-                        console.log(res.data);
+                        // console.log(res.data);
                         if (res.data.insertedId) {
+                            // console.log(_id)
+                            axios.patch(`https://library-management-server-flame.vercel.app/booksQtyDec/${_id}`, null, { withCredentials: true })
+                                .then(res => {
+                                    if (res.data.modifiedCount) {
+                                        Swal.fire({
+                                            title: "Submited",
+                                            icon: "success"
+                                        });
+                                        onCloseModal();
+                                    }
+                                    else {
+                                        Swal.fire({
+                                            title: "",
+                                            icon: "error"
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    return (error);
+
+                                });
+
+                        } else {
                             Swal.fire({
-                                title: "Submited",
-                                icon: "success"
+                                title: "",
+                                icon: "error"
                             });
-                            onCloseModal();
                         }
                     })
-                    .catch();
+                    .catch(error => {
+                        return (error);
+
+                    });
 
             }
         })
 
     }
 
+    // console.log(error);
+    // console.log(serverError);
 
 
-    const handleRead = async () => {
-        console.log();
 
+    if (dataLoading) {
+        return <div className='p-10 flex justify-center'><span className="loading loading-spinner loading-lg text-warning"></span></div>
     }
+
 
     return (
         <div>
@@ -127,7 +165,8 @@ const BookDetails = () => {
                     <div>
                         <h1 className="text-5xl font-bold">{name}</h1>
                         <p className="py-4 text-lg">Author: {author}</p>
-                        <p className="py-2">Ratings: {''}</p>
+                        {/* <p className="py-2"></p> */}
+                        <BookRating rating={rating}></BookRating>
                         <p className="py-2 text-lg">Available Quantity: <span className="badg text-lg font-bold p-2">{qty}</span> </p>
                         <p className="py-4">{description}</p>
                         <div className="py-4 overflow-x-auto card shrink-0 w-full max-w-sm">
@@ -135,17 +174,17 @@ const BookDetails = () => {
                                 <tbody>
                                     {/* row 1 */}
                                     <tr>
-                                        <th className="px-0">publisher</th>
+                                        <th className="px-0">Publisher</th>
                                         <td className="px-0">{publisher}</td>
                                     </tr>
                                     {/* row 2 */}
                                     <tr>
-                                        <th className="px-0">published_date</th>
-                                        <td className="px-0">{published_date}</td>
+                                        <th className="px-0">Published Year</th>
+                                        <td className="px-0">{publishedYear}</td>
                                     </tr>
                                     {/* row 3 */}
                                     <tr>
-                                        <th className="px-0">pages</th>
+                                        <th className="px-0">Total Pages</th>
                                         <td className="px-0">{pages}</td>
                                     </tr>
                                     {/* row 4 */}
@@ -161,8 +200,7 @@ const BookDetails = () => {
                             <button onClick={handleBorrow} className="btn btn-outline btn-secondary"
                                 disabled={qty < 1}
                             >Borrow</button>
-                            <button onClick={handleRead} className="btn btn-outline btn-info">Read Now</button>
-
+                            <Link to={`/viewPdf/${id}`}><button className="btn btn-outline btn-info">Read PDF Now</button></Link>
                         </div>
                     </div>
                 </div>
